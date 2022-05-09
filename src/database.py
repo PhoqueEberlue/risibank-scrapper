@@ -12,7 +12,7 @@ class Database:
 
         generate a table
         """
-        self.conn.execute("CREATE TABLE MEDIA ( "
+        self.conn.execute("CREATE TABLE IF NOT EXISTS MEDIA ( "
                           "id_media INT PRIMARY KEY NOT NULL,"
                           "date_ajout DATETIME,"
                           "auteur VARCHAR(100),"
@@ -22,7 +22,7 @@ class Database:
                           "source_link VARCHAR(200)"
                           ")")
 
-        self.conn.execute("CREATE TABLE POSSEDE_TAG ("
+        self.conn.execute("CREATE TABLE IF NOT EXISTS POSSEDE_TAG ("
                           "nom_tag VARCHAR(50),"
                           "id_media INT,"
                           "PRIMARY KEY (nom_tag, id_media)"

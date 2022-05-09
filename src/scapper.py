@@ -1,9 +1,11 @@
+import shutil
 from typing import List
 from database import Database
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
+import requests
 
 
 class Scrapper:
@@ -29,6 +31,7 @@ class Scrapper:
 
         for link in links:
             media = self.fetch_media(link)
+            self.download_img(media['id_media'], media['img_full_link'])
             self.database.add_media(media)
 
     def fetch_media(self, url):
@@ -70,3 +73,15 @@ class Scrapper:
             else:
                 i += 1
         return res
+
+    @staticmethod
+    def download_img(id_media, link):
+        r = requests.get(link, stream=True)
+
+        if r.status_code == 200:
+            r.raw.decode_content = True
+
+            with open(f"../img/{str(id_media)}.jpg", 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
+        else:
+            print("Erreur, l'image n'a pas pu etre recupere")
